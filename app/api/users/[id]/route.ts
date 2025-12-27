@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface User {
   id: number;
@@ -19,11 +19,12 @@ const names = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Hen
 const domains = ['example.com', 'test.com', 'demo.org', 'sample.net'];
 
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt(params.id);
-  const user = users.find(u => u.id === id);
+  const { id } = await params;
+  const userId = parseInt(id);
+  const user = users.find(u => u.id === userId);
   
   if (!user) {
     return NextResponse.json(
@@ -36,11 +37,12 @@ export async function GET(
 }
 
 export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt(params.id);
-  const userIndex = users.findIndex(u => u.id === id);
+  const { id } = await params;
+  const userId = parseInt(id);
+  const userIndex = users.findIndex(u => u.id === userId);
   
   if (userIndex === -1) {
     return NextResponse.json(
@@ -54,7 +56,7 @@ export async function PUT(
     const updatedUser: User = {
       ...users[userIndex],
       ...body,
-      id,
+      id: userId,
       updatedAt: new Date().toISOString(),
     };
     users[userIndex] = updatedUser;
@@ -72,11 +74,12 @@ export async function PUT(
 }
 
 export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt(params.id);
-  const userIndex = users.findIndex(u => u.id === id);
+  const { id } = await params;
+  const userId = parseInt(id);
+  const userIndex = users.findIndex(u => u.id === userId);
   
   if (userIndex === -1) {
     return NextResponse.json(
@@ -102,11 +105,12 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt(params.id);
-  const userIndex = users.findIndex(u => u.id === id);
+  const { id } = await params;
+  const userId = parseInt(id);
+  const userIndex = users.findIndex(u => u.id === userId);
   
   if (userIndex === -1) {
     return NextResponse.json(

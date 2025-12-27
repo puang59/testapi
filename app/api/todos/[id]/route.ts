@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface Todo {
   id: number;
@@ -15,11 +15,12 @@ let todos: Todo[] = [
 ];
 
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt(params.id);
-  const todo = todos.find(t => t.id === id);
+  const { id } = await params;
+  const todoId = parseInt(id);
+  const todo = todos.find(t => t.id === todoId);
   
   if (!todo) {
     return NextResponse.json(
@@ -32,11 +33,12 @@ export async function GET(
 }
 
 export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt(params.id);
-  const todoIndex = todos.findIndex(t => t.id === id);
+  const { id } = await params;
+  const todoId = parseInt(id);
+  const todoIndex = todos.findIndex(t => t.id === todoId);
   
   if (todoIndex === -1) {
     return NextResponse.json(
@@ -62,11 +64,12 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt(params.id);
-  const todoIndex = todos.findIndex(t => t.id === id);
+  const { id } = await params;
+  const todoId = parseInt(id);
+  const todoIndex = todos.findIndex(t => t.id === todoId);
   
   if (todoIndex === -1) {
     return NextResponse.json(
