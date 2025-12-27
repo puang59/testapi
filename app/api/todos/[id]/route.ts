@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 interface Todo {
   id: number;
@@ -9,9 +9,9 @@ interface Todo {
 }
 
 // Shared store with parent route
-let todos: Todo[] = [
-  { id: 1, title: 'Learn Next.js', completed: false },
-  { id: 2, title: 'Build API', completed: true },
+const todos: Todo[] = [
+  { id: 1, title: "Learn Next.js", completed: false },
+  { id: 2, title: "Build API", completed: true },
 ];
 
 export async function GET(
@@ -20,15 +20,12 @@ export async function GET(
 ) {
   const { id } = await params;
   const todoId = parseInt(id);
-  const todo = todos.find(t => t.id === todoId);
-  
+  const todo = todos.find((t) => t.id === todoId);
+
   if (!todo) {
-    return NextResponse.json(
-      { error: 'Todo not found' },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Todo not found" }, { status: 404 });
   }
-  
+
   return NextResponse.json(todo);
 }
 
@@ -38,15 +35,12 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const todoId = parseInt(id);
-  const todoIndex = todos.findIndex(t => t.id === todoId);
-  
+  const todoIndex = todos.findIndex((t) => t.id === todoId);
+
   if (todoIndex === -1) {
-    return NextResponse.json(
-      { error: 'Todo not found' },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Todo not found" }, { status: 404 });
   }
-  
+
   try {
     const body = (await request.json()) as Partial<Todo>;
     const updatedTodo: Todo = {
@@ -69,19 +63,15 @@ export async function DELETE(
 ) {
   const { id } = await params;
   const todoId = parseInt(id);
-  const todoIndex = todos.findIndex(t => t.id === todoId);
-  
+  const todoIndex = todos.findIndex((t) => t.id === todoId);
+
   if (todoIndex === -1) {
-    return NextResponse.json(
-      { error: 'Todo not found' },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Todo not found" }, { status: 404 });
   }
-  
+
   const deletedTodo = todos.splice(todoIndex, 1)[0];
   return NextResponse.json({
-    message: 'Todo deleted',
+    message: "Todo deleted",
     deletedTodo,
   });
 }
-
